@@ -6,6 +6,7 @@ import {
   NavbarContents,
   NavItems,
 } from "../constants/navbar";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,33 +61,33 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 lg:h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <a href="#home" className="group relative">
+            <Link href="/" className="group relative">
               <span className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent hover:from-purple-600 hover:via-blue-500 hover:to-cyan-400 transition-all duration-300">
                 Sakda
               </span>
               <div className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-600 group-hover:w-full transition-all duration-300"></div>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:block">
             <div className="ml-10 flex items-baseline space-x-8">
               {NAV_ITEMS.map((item) => (
-                <a
+                <Link
                   key={item.href}
                   href={item.href}
                   className="group relative px-3 py-2 text-xl font-medium text-gray-300 hover:text-white transition-all duration-300"
                 >
                   {item.label}
                   <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:w-full transition-all duration-300"></div>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
 
           <div className="flex items-center space-x-4">
             {/* CTA Button */}
-            <a
+            <Link
               href="#contact"
               className="hidden sm:inline-flex items-center px-4 py-2 text-lg font-medium text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-cyan-500/25"
             >
@@ -104,7 +105,7 @@ const Navbar = () => {
                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                 />
               </svg>
-            </a>
+            </Link>
 
             {/* Mobile menu button */}
             <div ref={navRef} className="lg:hidden">
@@ -143,7 +144,7 @@ const Navbar = () => {
                 <div className="bg-gray-900/95 backdrop-blur-md rounded-2xl border border-gray-700/50 shadow-xl overflow-hidden">
                   <div className="py-4">
                     {NAV_ITEMS.map((item, index) => (
-                      <a
+                      <Link
                         key={item.href}
                         href={item.href}
                         onClick={closeMenu}
@@ -172,12 +173,12 @@ const Navbar = () => {
                             />
                           </svg>
                         </div>
-                      </a>
+                      </Link>
                     ))}
 
                     {/* Mobile CTA */}
                     <div className="px-6 pt-4 mt-4 border-t border-gray-700/50">
-                      <a
+                      <Link
                         href="#contact"
                         onClick={closeMenu}
                         className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105"
@@ -196,7 +197,7 @@ const Navbar = () => {
                             d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                           />
                         </svg>
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
