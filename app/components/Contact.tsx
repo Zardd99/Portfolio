@@ -32,13 +32,10 @@ const Contact: React.FC = () => {
                 address={contactInfo.address}
               />
             </div>
-
-            {/* Social Links */}
           </div>
 
           {/* Contact Form */}
           <ContactForm />
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-8"></div>
         </div>
       </div>
     </div>
