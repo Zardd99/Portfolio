@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@gsap/react": "^2.1.2",
     "@midudev/tailwind-animations": "^0.2.0",
     "gsap": "^3.13.0",

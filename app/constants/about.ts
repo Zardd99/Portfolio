@@ -77,7 +77,7 @@ const ABOUT_CONTENTS: AboutContents[] = [
       },
     ],
     stats: [
-      { number: "2+", label: "Projects Completed", href: "/projects" },
+      { number: "10+", label: "Projects Completed", href: "/projects" },
       { number: "2+", label: "Years Experience", href: "#about" },
       { number: "15+", label: "Technologies Mastered", href: "#about" },
     ],
