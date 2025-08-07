@@ -4,7 +4,7 @@ import Link from "next/link";
 const AboutContact = () => (
   <div className="mt-16 text-center fade-in-element">
     <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-8 border border-gray-600">
-      <h3 className="text-2xl font-bold text-white mb-4">
+      <h3 className="font-bebas-neue text-2xl font-bold text-white mb-4">
         Ready to work together?
       </h3>
       <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
@@ -16,7 +16,7 @@ const AboutContact = () => (
           href="/#contact"
           className="inline-flex items-center px-8 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-cyan-500/25"
         >
-          <span>Get In Touch</span>
+          <span className="font-bebas-neue">Get In Touch</span>
           <svg
             className="ml-2 w-5 h-5"
             fill="none"
@@ -35,7 +35,7 @@ const AboutContact = () => (
           href="/projects"
           className="inline-flex items-center px-8 py-3 bg-transparent border-2 border-gray-600 text-gray-300 font-semibold rounded-lg hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
         >
-          <span>View My Work</span>
+          <span className="font-bebas-neue">View My Work</span>
           <svg
             className="ml-2 w-5 h-5"
             fill="none"

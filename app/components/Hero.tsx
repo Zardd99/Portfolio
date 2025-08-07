@@ -76,7 +76,7 @@ const Hero = () => {
       {/* Introduction */}
       <div className="max-w-4xl space-y-6 md:space-y-8">
         <div className="inline-block relative group">
-          <div className="hero__subtitle text-lg md:text-xl lg:text-2xl font-medium bg-gradient-to-r     from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+          <div className="hero__subtitle font-bebas-neue text-lg md:text-xl lg:text-2xl font-medium bg-gradient-to-r     from-blue-400 to-cyan-400 bg-clip-text text-transparent">
             {heroData.subtitle}
           </div>
           <div className="absolute bottom-0 left-0 w-0 h-px bg-gradient-to-r from-blue-400 to-cyan-400 transition-all duration-500 group-hover:w-full" />

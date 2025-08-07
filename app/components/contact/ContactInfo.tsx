@@ -12,7 +12,7 @@ const ContactInfo = ({ email, phone, address }: ContactInfoProps) => {
           <Mail className="w-6 h-6 text-purple-400" />
         </div>
         <div className="ml-4">
-          <h3 className="text-white font-semibold">Email</h3>
+          <h3 className="text-left text-white font-semibold">Email</h3>
           <p className="text-gray-400">{email}</p>
         </div>
       </div>
@@ -24,7 +24,7 @@ const ContactInfo = ({ email, phone, address }: ContactInfoProps) => {
           <Phone className="w-6 h-6 text-purple-400" />
         </div>
         <div className="ml-4">
-          <h3 className="text-white font-semibold">Phone</h3>
+          <h3 className="text-left text-white font-semibold">Phone</h3>
           <p className="text-gray-400">{phone}</p>
         </div>
       </div>
@@ -36,7 +36,7 @@ const ContactInfo = ({ email, phone, address }: ContactInfoProps) => {
           <MapPin className="w-6 h-6 text-purple-400" />
         </div>
         <div className="ml-4">
-          <h3 className="text-white font-semibold">Location</h3>
+          <h3 className="text-left text-white font-semibold">Location</h3>
           <p className="text-gray-400">{address}</p>
         </div>
       </div>

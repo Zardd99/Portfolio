@@ -2,7 +2,6 @@ import { Contacts, ContactContent } from "../constants/contact";
 import ContactForm from "./contact/ContactForm";
 import ContactHero from "./contact/ContactHero";
 import ContactInfo from "./contact/ContactInfo";
-import ContactSocial from "./contact/ContactSocial";
 
 const Contact: React.FC = () => {
   const contactInfo: ContactContent = Contacts[0];
@@ -17,7 +16,7 @@ const Contact: React.FC = () => {
           {/* Contact Info */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-3xl font-bold text-white mb-6">
+              <h2 className="font-bebas-neue text-3xl font-bold text-white mb-6">
                 Let us Connect
               </h2>
               <p className="text-gray-400 text-lg leading-relaxed mb-8">
@@ -35,7 +34,6 @@ const Contact: React.FC = () => {
             </div>
 
             {/* Social Links */}
-            <ContactSocial />
           </div>
 
           {/* Contact Form */}

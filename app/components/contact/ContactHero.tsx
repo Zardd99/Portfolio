@@ -8,7 +8,7 @@ const ContactHero = ({ description }: ContactHeroProps) => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,119,198,0.1),transparent_50%)]"></div>
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center">
-          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent mb-6">
+          <h1 className="font-bebas-neue text-5xl md:text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent mb-6">
             Get In Touch
           </h1>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
