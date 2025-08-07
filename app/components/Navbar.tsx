@@ -88,7 +88,7 @@ const Navbar = () => {
           <div className="flex items-center space-x-4">
             {/* CTA Button */}
             <Link
-              href="#contact"
+              href="/#contact"
               className="hidden sm:inline-flex items-center px-4 py-2 text-lg font-medium text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-cyan-500/25"
             >
               <span>{cta.cta}</span>

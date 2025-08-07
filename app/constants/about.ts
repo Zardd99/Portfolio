@@ -5,24 +5,30 @@ type Tool = {
   imgAlt: string;
 };
 
+type Stats = {
+  number: string;
+  label: string;
+  href?: string;
+};
+
+type Skills = {
+  name: string;
+  level: number;
+};
+
+type Values = {
+  icon: string;
+  title: string;
+  description: string;
+};
+
 type AboutContents = {
   title: string;
   subtitle: string;
   story: string[];
-  skills: {
-    name: string;
-    level: number;
-  }[];
-  values: {
-    icon: string;
-    title: string;
-    description: string;
-  }[];
-  stats: {
-    number: string;
-    label: string;
-    href?: string;
-  }[];
+  skills: Skills[];
+  values: Values[];
+  stats: Stats[];
   tools: Tool[];
 };
 
@@ -147,4 +153,4 @@ const ABOUT_CONTENTS: AboutContents[] = [
 ];
 
 export { ABOUT_CONTENTS };
-export type { AboutContents };
+export type { AboutContents, Tool, Stats, Skills, Values };
