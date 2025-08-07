@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       accessToken: process.env.EMAILJS_PRIVATE_KEY,
     };
 
-    const response = await axios.post(url, data, {
+    await axios.post(url, data, {
       headers: {
         "Content-Type": "application/json",
         "User-Agent":
@@ -48,15 +48,17 @@ export async function POST(req: Request) {
       { success: true, message: "Email sent successfully!" },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Email sending failed:", error);
 
     let errorMessage = "Failed to send email. Please try again later.";
     let statusCode = 500;
 
-    if (error.response) {
-      statusCode = error.response.status;
-      errorMessage = error.response.data || errorMessage;
+    if (axios.isAxiosError(error)) {
+      statusCode = error.response?.status || 500;
+      errorMessage = error.response?.data?.error || error.message;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
     }
 
     return NextResponse.json({ error: errorMessage }, { status: statusCode });

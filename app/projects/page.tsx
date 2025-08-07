@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Github, ExternalLink, Calendar, Code, Star } from "lucide-react";
+import { Github, ExternalLink, Calendar } from "lucide-react";
 import {
   projects,
   categories,
