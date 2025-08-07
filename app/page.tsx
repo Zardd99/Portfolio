@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Contact from "./components/Contact";
+import Projects from "./projects/page";
 
 export default function Home() {
   return (
@@ -24,6 +25,9 @@ export default function Home() {
           className="flex flex-col gap-8 items-center justify-center text-center container min-h-screen py-20 rounded-2xl"
         >
           <About />
+        </section>
+        <section id="projects">
+          <Projects />
         </section>
         <section
           id="contact"
