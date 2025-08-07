@@ -25,6 +25,7 @@ const Projects = () => {
   const projectsGridRef = useRef<HTMLDivElement>(null);
   const stickyTitleRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   const filteredProjects =
     filter === "all"
@@ -32,20 +33,39 @@ const Projects = () => {
       : projectsData.filter((project) => project.category === filter);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("animate-fade-in-up");
-        }
-      });
-    });
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-fade-in-up");
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+      }
+    );
 
     document
       .querySelectorAll(".fade-in-element")
       .forEach((el) => observer.observe(el));
 
+    observerRef.current = observer;
+
     return () => observer.disconnect();
-  }, []);
+  }, [filteredProjects]);
+
+  useEffect(() => {
+    gsap.set(".project-card", {
+      opacity: 1,
+      y: 0,
+      clearProps: "all",
+    });
+  }, [filter]);
 
   useEffect(() => {
     if (
@@ -71,11 +91,11 @@ const Projects = () => {
         .to(stickyTitleRef.current, {
           position: "fixed",
           top: "22%",
-          left: "63%",
-          x: "0.3%",
+          left: "65%",
+          x: "0",
           scale: 0.8,
           opacity: 1,
-          duration: 1,
+          duration: 0.5,
         })
         .to(
           stickyTitleRef.current,
@@ -93,7 +113,7 @@ const Projects = () => {
         trigger: projectsGridRef.current,
         start: "top top",
         endTrigger: contactRef.current,
-        end: "top 60%",
+        end: "top +=60%",
         pin: titleRef.current,
         pinSpacing: false,
         markers: false,
@@ -106,26 +126,26 @@ const Projects = () => {
             ease: "none",
           });
         },
+        onLeave: () => {
+          const currentStyles = window.getComputedStyle(
+            stickyTitleRef.current!
+          );
+          const currentTop = currentStyles.top;
+          const currentLeft = currentStyles.left;
+
+          gsap.set(stickyTitleRef.current, {
+            position: "absolute",
+            top: currentTop,
+            left: currentLeft,
+            transform: "none",
+          });
+        },
         onEnterBack: () => {
           gsap.set(stickyTitleRef.current, {
             position: "fixed",
             top: "20%",
             left: "65%",
-          });
-        },
-        onLeave: () => {
-          const rect = stickyTitleRef.current!.getBoundingClientRect();
-          gsap.set(stickyTitleRef.current, {
-            position: "absolute",
-            top: rect.top,
-            left: rect.left,
-          });
-        },
-        onLeaveBack: () => {
-          gsap.set(stickyTitleRef.current, {
-            position: "fixed",
-            top: "20%",
-            left: "65%",
+            transform: "none",
           });
         },
       });
@@ -177,7 +197,7 @@ const Projects = () => {
       {/* Sticky Title */}
       <div
         ref={stickyTitleRef}
-        className="fixed left-1/2 bottom-1/2 -translate-x-1/2 w-[22rem] opacity-0 z-40 hidden lg:block"
+        className="fixed left-[58%] top-[20%] w-[22rem] opacity-0 z-40 hidden lg:block"
       >
         <h1 className="font-bebas-neue text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent text-right">
           My Projects
@@ -217,19 +237,19 @@ const Projects = () => {
           <div className="grid grid-cols-1 gap-8">
             {filteredProjects.map((project, index) => (
               <div
-                key={project.id}
+                key={`${project.id}-${filter}`}
                 className="group fade-in-element bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700/50 hover:border-purple-500/50 transition-all duration-500 hover:transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/10"
                 style={{
                   animationDelay: `${index * 100}ms`,
                 }}
               >
-                <div className="relative overflow-hidden h-48">
+                <div className="relative overflow-hidden h-60">
                   <Image
                     src={project.image}
                     alt={project.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     width={500}
-                    height={300}
+                    height={500}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent"></div>
                 </div>
@@ -304,6 +324,13 @@ const Projects = () => {
             <div className="text-gray-400">Years Experience</div>
           </div>
         </div>
+        <AboutContact />
+        <AboutContact />
+        <AboutContact />
+        <AboutContact />
+        <AboutContact />
+        <AboutContact />
+        <AboutContact />
         <AboutContact />
       </div>
     </div>
