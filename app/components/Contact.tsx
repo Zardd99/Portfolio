@@ -7,7 +7,7 @@ const Contact: React.FC = () => {
   const contactInfo: ContactContent = Contacts[0];
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white py-20">
+    <div className="min-h-screen bg-gray-900 text-white py-20 rounded-2xl">
       {/* Hero Section */}
       <ContactHero description={contactInfo.description} />
 
