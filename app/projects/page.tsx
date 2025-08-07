@@ -325,13 +325,6 @@ const Projects = () => {
           </div>
         </div>
         <AboutContact />
-        <AboutContact />
-        <AboutContact />
-        <AboutContact />
-        <AboutContact />
-        <AboutContact />
-        <AboutContact />
-        <AboutContact />
       </div>
     </div>
   );
