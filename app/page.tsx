@@ -3,6 +3,7 @@
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Contact from "./components/Contact";
 
 export default function Home() {
   return (
@@ -23,6 +24,12 @@ export default function Home() {
           className="flex flex-col gap-8 items-center justify-center text-center container min-h-screen py-20 rounded-2xl"
         >
           <About />
+        </section>
+        <section
+          id="contact"
+          className="flex flex-col gap-8 items-center justify-center text-center container min-h-screen py-20 rounded-2xl"
+        >
+          <Contact />
         </section>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>
