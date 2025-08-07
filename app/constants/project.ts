@@ -43,7 +43,7 @@ const projects = [
     technologies: ["ReactJS", "TypeScript", "NextJS", "TailwindCSS"],
     category: "frontend",
     github: "https://github.com/Zardd99/Portfolio",
-    live: "#",
+    live: "https://portfolio-one-orpin-30.vercel.app/",
     date: "2025",
   },
 ];
