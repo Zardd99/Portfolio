@@ -39,7 +39,7 @@ const AboutProfileImage = () => (
             })}
           </div>
           <Image
-            src="/self.png"
+            src="/Self.png"
             alt="Profile Picture"
             className="w-full h-full rounded-full object-cover hover:scale-105 transition-all duration-300"
             width={192}
