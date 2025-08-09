@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { Github, ExternalLink, Calendar } from "lucide-react";
+import { Github, ExternalLink, Calendar, Link } from "lucide-react";
 import {
   projects,
   categories,
@@ -12,6 +12,7 @@ import Navbar from "../components/Navbar";
 import AboutContact from "../components/about/AboutContact";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { Stats, ABOUT_CONTENTS } from "../constants/about";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,6 +27,8 @@ const Projects = () => {
   const stickyTitleRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+  const stats: Stats[] = ABOUT_CONTENTS[0].stats;
 
   const filteredProjects =
     filter === "all"
@@ -188,7 +191,8 @@ const Projects = () => {
         {/* Sticky Title */}
         <div
           ref={stickyTitleRef}
-          className="sticky left-[58%] top-[0%] w-[22rem] opacity-0 z-40 hidden lg:block"
+          className="sticky left-[60%] top-[0%] w-[22rem] opacity-0 z-40 hidden lg:block pb-6"
+          style={{ pointerEvents: "none" }}
         >
           <h1 className="font-bebas-neue text-6xl font-bold bg-gradient-to-r from-white via-purple-200 to-purple-400 bg-clip-text text-transparent text-right">
             My Projects
@@ -213,7 +217,7 @@ const Projects = () => {
                 <button
                   key={category.key}
                   onClick={() => setFilter(category.key)}
-                  className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                  className={`px-6 py-3 rounded-full text-sm z-50 font-medium transition-all duration-300 cursor-pointer ${
                     filter === category.key
                       ? "bg-purple-600 text-white shadow-lg shadow-purple-500/25"
                       : "bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white"
@@ -300,20 +304,14 @@ const Projects = () => {
         ref={contactRef}
       >
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-3xl font-bold text-purple-400 mb-2">
-              {projects.length}
+          {stats.map((stat) => (
+            <div key={stat.label} className="fade-in-element">
+              <div className="text-3xl font-bold text-purple-400 mb-2">
+                {stat.number}
+              </div>
+              <div className="text-gray-400">{stat.label}</div>
             </div>
-            <div className="text-gray-400">Projects Completed</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-purple-400 mb-2">15+</div>
-            <div className="text-gray-400">Technologies Used</div>
-          </div>
-          <div>
-            <div className="text-3xl font-bold text-purple-400 mb-2">2</div>
-            <div className="text-gray-400">Years Experience</div>
-          </div>
+          ))}
         </div>
         <AboutContact />
       </div>

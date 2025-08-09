@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="font-ibm-plex-sans min-h-screen">
       <main className="flex flex-col gap-[32px] items-center">
-        <header className="flex w-full container">
+        <header className="flex w-full container z-999">
           <Navbar />
         </header>
         <section
