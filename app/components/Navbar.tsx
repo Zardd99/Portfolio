@@ -207,12 +207,12 @@ const Navbar = () => {
         </div>
       </div>
 
-      {isOpen && (
+      {/* {isOpen && (
         <div
           className="fixed inset-0 bg-black/20 lg:hidden"
           onClick={closeMenu}
         ></div>
-      )}
+      )} */}
     </nav>
   );
 };

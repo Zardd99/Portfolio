@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { Github, ExternalLink, Calendar, Link } from "lucide-react";
+import { Github, ExternalLink, Calendar } from "lucide-react";
 import {
   projects,
   categories,
@@ -206,7 +206,7 @@ const Projects = () => {
         </div>
 
         {/* Projects Container */}
-        <div className="xl:max-w-xl lg:max-w-lg 2xl:max-w-3xl md:ml-10 lg:ml-30 xl:ml-50 px-4 sm:px-6 lg:px-8 pt-12 container">
+        <div className="xl:max-w-xl lg:max-w-lg 2xl:max-w-3xl mx-auto lg:ml-30 xl:ml-50 px-4 sm:px-6 lg:px-8 pt-12 container">
           <div
             ref={projectsGridRef}
             className="transition-all duration-500 ml-0 w-full"
