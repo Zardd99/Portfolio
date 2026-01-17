@@ -46,6 +46,26 @@ const projects = [
     live: "https://portfolio-one-orpin-30.vercel.app/",
     date: "2025",
   },
+  {
+    id: 3,
+    title: "Restaurant Management System",
+    description:
+      "Developed a comprehensive restaurant management system to streamline operations, including table reservations, order processing, and inventory management. Implemented a user-friendly interface using ReactJS and ensured responsiveness with TailwindCSS. Integrated backend services to handle real-time data updates and secure user authentication.",
+    image: "/restaurant-mangement-system-seven.vercel.app_dashboard.png",
+    technologies: [
+      "ReactJS",
+      "TypeScript",
+      "NextJS",
+      "TailwindCSS",
+      "NodeJS",
+      "Express",
+      "MongoDB",
+    ],
+    category: "fullstack",
+    github: "https://github.com/Zardd99/restaurant_mangement_system",
+    live: "https://restaurant-mangement-system-seven.vercel.app/login",
+    date: "2025",
+  },
 ];
 
 const categories = [
