@@ -1,143 +1,125 @@
-import React, { useEffect, useRef } from "react";
-import { HERO_CONTENT, HeroContents } from "../constants/hero";
-import CVDownload from "./CVDownload";
+"use client";
+
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import dynamic from "next/dynamic";
+import { HERO_CONTENT } from "../constants/hero";
+import CVDownload from "./CVDownload";
+import { scrambleText } from "../lib/scramble";
+
+const ParticleField = dynamic(() => import("./ParticleField"), { ssr: false });
 
 const Hero = () => {
-  const heroData: HeroContents = HERO_CONTENT[0];
-  const containerRef = useRef(null);
-  const containerClass = "mt-5 text-center";
-  const [currentTitle, setCurrentTitle] = React.useState(heroData.title);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTitle((prev) =>
-        prev === heroData.title ? heroData.title2 : heroData.title
-      );
-    }, 2100);
-
-    return () => clearInterval(interval);
-  }, [heroData.title, heroData.title2]);
+  const data = HERO_CONTENT[0];
+  const rootRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLDivElement>(null);
+  const skills = data.skills.split(" · ");
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.killTweensOf(".animated_word");
+      const tl = gsap.timeline({ delay: 0.15 });
+      tl.from(".hero-line", {
+        yPercent: 120,
+        duration: 1,
+        ease: "power4.out",
+        stagger: 0.12,
+      })
+        .from(
+          ".hero-fade",
+          { autoAlpha: 0, y: 24, duration: 0.7, stagger: 0.08, ease: "power3.out" },
+          "-=0.5"
+        )
+        .from(".hero-chip", { autoAlpha: 0, y: 12, stagger: 0.05, duration: 0.4 }, "-=0.4");
 
-      gsap.fromTo(
-        ".animated_word",
-        {
-          opacity: 0,
-          y: 50,
-          transform: "translate3d(0,20px,0) rotateX(0deg) rotateY(0deg)",
-        },
-        {
-          opacity: 1,
-          y: 0,
-          transform: "translate3d(0,0px,0) rotateX(0deg) rotateY(0deg)",
-          ease: "power2.inOut",
-          stagger: 0.05,
-          repeat: -1,
-          yoyo: true,
-          repeatDelay: 1,
-        }
-      );
-    }, containerRef);
+      // mouse parallax on the name block
+      const onMove = (e: MouseEvent) => {
+        const dx = (e.clientX / window.innerWidth - 0.5) * 2;
+        const dy = (e.clientY / window.innerHeight - 0.5) * 2;
+        gsap.to(nameRef.current, {
+          rotateY: dx * 6,
+          rotateX: -dy * 6,
+          x: dx * 14,
+          duration: 0.6,
+          ease: "power2.out",
+          transformPerspective: 900,
+        });
+      };
+      window.addEventListener("mousemove", onMove);
+      return () => window.removeEventListener("mousemove", onMove);
+    }, rootRef);
 
-    return () => {
-      ctx.revert();
-    };
+    return () => ctx.revert();
   }, []);
 
-  useEffect(() => {
-    const words = document.querySelectorAll(".animated_word");
-    if (words.length > 0) {
-      gsap.killTweensOf(words);
-      gsap.fromTo(
-        words,
-        {
-          opacity: 0,
-          y: 50,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          ease: "power2.inOut",
-          stagger: 0.05,
-          repeat: -1,
-          yoyo: true,
-          repeatDelay: 1,
-        }
-      );
-    }
-  }, [currentTitle]);
-
   return (
-    <>
-      {/* Introduction */}
-      <div className="max-w-4xl space-y-6 md:space-y-8">
-        <div className="inline-block relative group">
-          <div className="hero__subtitle font-bebas-neue text-lg md:text-xl lg:text-2xl font-medium bg-gradient-to-r     from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            {heroData.subtitle}
-          </div>
-          <div className="absolute bottom-0 left-0 w-0 h-px bg-gradient-to-r from-blue-400 to-cyan-400 transition-all duration-500 group-hover:w-full" />
+    <section
+      id="home"
+      ref={rootRef}
+      className="scanlines relative flex min-h-screen w-full flex-col justify-center overflow-hidden px-6 pt-28 md:px-12"
+    >
+      {/* 3D particle backdrop */}
+      <ParticleField className="absolute inset-0 -z-10 opacity-80" />
+      <div className="grid-lines pointer-events-none absolute inset-0 -z-10 opacity-40" />
+
+      {/* corner HUD */}
+      <div className="pointer-events-none absolute inset-x-6 top-24 flex justify-between font-hud text-[10px] text-muted md:inset-x-12">
+        <span>■ {data.subtitle}</span>
+        <span className="hidden md:block">PHNOM PENH · 11.55°N</span>
+      </div>
+
+      <div className="mx-auto w-full max-w-[1600px]">
+        <div className="mb-6 hero-fade flex items-center gap-3 font-hud text-[11px] text-accent">
+          <span className="h-px w-10 bg-accent" />
+          PORTFOLIO / 2025 — FRONT-END ENGINEER
         </div>
 
-        {/* Title */}
         <div
-          className={`hero__title animated_title ${containerClass} text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tighter`}
-          ref={containerRef}
+          ref={nameRef}
+          className="font-display leading-[0.82] text-ink"
+          style={{ transformStyle: "preserve-3d" }}
         >
-          {currentTitle.split("<br />").map((line, index) => (
-            <div
-              key={`${currentTitle}-${index}`}
-              className="flex items-center justify-center max-w-full flex-wrap gap-2 px-10 md:gap-3"
-            >
-              {line.split(" ").map((word, i) => (
-                <span
-                  key={`${currentTitle}-${index}-${i}`}
-                  className="animated_word"
-                  dangerouslySetInnerHTML={{ __html: word }}
-                />
-              ))}
+          <div className="overflow-hidden">
+            <div className="hero-line text-[19vw] md:text-[16vw] lg:text-[14vw]">
+              SAKDA
             </div>
-          ))}
+          </div>
+          <div className="overflow-hidden">
+            <div className="hero-line text-[19vw] md:text-[16vw] lg:text-[14vw]">
+              <span className="text-stroke-accent">CHIN</span>
+              <span className="text-accent">.</span>
+            </div>
+          </div>
         </div>
 
-        {/* Description */}
-        <div className="space-y-4">
-          <p className="text-gray-300 text-sm sm:text-base md:text-lg max-w-3xl mx-auto leading-relaxed">
-            {heroData.description}
+        <div className="mt-8 grid gap-8 md:grid-cols-[1.1fr_1fr] md:items-end">
+          <p className="hero-fade max-w-prose text-base leading-relaxed text-muted md:text-lg">
+            {data.description}{" "}
+            <span className="text-ink">{data.description2}</span>
           </p>
 
-          {/* Skills Section */}
-          <div className="flex flex-col items-center space-y-2">
-            <span className="text-gray-400 text-sm font-medium">
-              {heroData.highlight}
-            </span>
-            <div className="flex flex-wrap justify-center gap-3">
-              {heroData.skills.split(" · ").map((skill, index) => (
+          <div className="hero-fade flex flex-col items-start gap-5 md:items-end">
+            <div className="flex flex-wrap gap-2 md:justify-end">
+              {skills.map((s) => (
                 <span
-                  key={index}
-                  className="px-3 py-1 text-xs sm:text-sm bg-gray-800 rounded-full text-cyan-300 border border-gray-700 hover:border-cyan-400 transition-all"
+                  key={s}
+                  className="hero-chip border border-line px-3 py-1.5 font-hud text-[10px] text-muted transition-colors hover:border-accent hover:text-accent"
+                  onMouseEnter={(e) => scrambleText(e.currentTarget, s)}
                 >
-                  {skill}
+                  {s}
                 </span>
               ))}
             </div>
+            <CVDownload />
           </div>
-
-          {/* Tech Stack */}
-          <p className="text-gray-400 text-xs sm:text-sm mt-4">
-            {heroData.description2}
-          </p>
-        </div>
-
-        {/* CV Download Button */}
-        <div className="pt-6 animate-fade-in-up">
-          <CVDownload className="inline-block px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg hover:from-blue-600 hover:to-cyan-600 transition-all transform hover:scale-105 shadow-lg hover:shadow-cyan-500/20" />
         </div>
       </div>
-    </>
+
+      {/* scroll cue */}
+      <div className="pointer-events-none absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 font-hud text-[9px] text-muted">
+        <span>SCROLL</span>
+        <span className="h-10 w-px bg-gradient-to-b from-accent to-transparent" />
+      </div>
+    </section>
   );
 };
 

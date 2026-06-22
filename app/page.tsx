@@ -1,42 +1,42 @@
-"use client";
-
+import SmoothScroll from "./components/SmoothScroll";
+import Preloader from "./components/Preloader";
+import Cursor from "./components/Cursor";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
+import Marquee from "./components/Marquee";
 import About from "./components/About";
+import Projects from "./components/Projects";
 import Contact from "./components/Contact";
-import Projects from "./projects/page";
+import Footer from "./components/Footer";
+
+const MARQUEE_ITEMS = [
+  "REACT",
+  "NEXT.JS",
+  "TYPESCRIPT",
+  "TAILWIND",
+  "GSAP",
+  "NODE.JS",
+  "MONGODB",
+  "THREE.JS",
+];
 
 export default function Home() {
   return (
-    <div className="font-ibm-plex-sans min-h-screen">
-      <main className="flex flex-col gap-[32px] items-center">
-        <header className="flex w-full container z-999">
-          <Navbar />
-        </header>
-        <section
-          id="home"
-          className="flex flex-col gap-8 items-center justify-center text-center container mt-50"
-        >
+    <>
+      <Preloader />
+      <Cursor />
+      <Navbar />
+      <SmoothScroll>
+        <main className="relative w-full overflow-hidden">
           <Hero />
-        </section>
-        <div className="p-10"></div>
-        <section
-          id="about"
-          className="flex flex-col gap-8 items-center justify-center text-center container min-h-screen py-20 rounded-2xl"
-        >
+          <Marquee items={MARQUEE_ITEMS} />
           <About />
-        </section>
-        <section id="projects">
           <Projects />
-        </section>
-        <section
-          id="contact"
-          className="flex flex-col gap-8 items-center justify-center text-center container min-h-screen py-20 rounded-2xl"
-        >
+          <Marquee items={MARQUEE_ITEMS} reverse />
           <Contact />
-        </section>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center"></footer>
-    </div>
+          <Footer />
+        </main>
+      </SmoothScroll>
+    </>
   );
 }

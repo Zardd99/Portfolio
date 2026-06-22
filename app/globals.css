@@ -2,56 +2,204 @@
 @plugin "@midudev/tailwind-animations";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  scroll-behavior: smooth;
+  --bg: #0a0a0b;
+  --bg-2: #101013;
+  --ink: #f5f5f3;
+  --muted: #7d7d86;
+  --line: rgba(245, 245, 243, 0.1);
+  --accent: #cbff47;
+  --accent-soft: rgba(203, 255, 71, 0.12);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg);
+  --color-foreground: var(--ink);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
   --font-bebas-neue: var(--bebas-neue);
   --font-ibm-plex-sans: var(--ibm-plex-sans);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--bg);
+  color: var(--ink);
   font-family: var(--font-ibm-plex-sans, sans-serif);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
+::selection {
+  background: var(--accent);
+  color: #0a0a0b;
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #060607;
+}
+::-webkit-scrollbar-thumb {
+  background: #26262c;
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ── Typography utilities ── */
+@utility font-display {
+  font-family: var(--font-bebas-neue), sans-serif;
+  letter-spacing: 0.02em;
+}
+
+@utility font-hud {
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* ── Decorative textures ── */
+.grid-lines {
+  background-image: linear-gradient(
+      to right,
+      rgba(245, 245, 243, 0.04) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(245, 245, 243, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.025) 0px,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.accent-glow {
+  box-shadow: 0 0 0 1px var(--accent-soft), 0 0 40px -8px var(--accent-soft);
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px rgba(245, 245, 243, 0.55);
+  color: transparent;
+}
+
+.text-stroke-accent {
+  -webkit-text-stroke: 1.5px var(--accent);
+  color: transparent;
+}
+
+/* ── Keyframes ── */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 28s linear infinite;
+}
+.animate-marquee-rev {
+  animation: marquee 28s linear infinite reverse;
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin-slow 22s linear infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
+}
+.animate-pulse-dot {
+  animation: pulse-dot 1.6s ease-in-out infinite;
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+.float-animation {
+  animation: float-y 6s ease-in-out infinite;
+}
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  94% {
+    opacity: 0.3;
+  }
+  96% {
+    opacity: 1;
+  }
+}
+.animate-flicker {
+  animation: flicker 5s linear infinite;
+}
+
+/* legacy fade helpers (kept for any IntersectionObserver usage) */
 .fade-in-element {
   opacity: 0;
   transform: translateY(30px);
-  transition: all 0.6s ease-out;
+  transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
-
 .animate-fade-in-up {
   opacity: 1;
   transform: translateY(0);
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee,
+  .animate-marquee-rev,
+  .animate-spin-slow,
+  .float-animation {
+    animation: none !important;
   }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.float-animation {
-  animation: float 3s ease-in-out infinite;
-}
-
-.animate-heartbeat {
-  animation: heartbeat 4.6s ease-out infinite;
 }
