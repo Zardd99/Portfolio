@@ -8,6 +8,7 @@ import About from "./components/About";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import FooterReveal from "./components/FooterReveal";
 
 const MARQUEE_ITEMS = [
   "REACT",
@@ -27,7 +28,7 @@ export default function Home() {
       <Cursor />
       <Navbar />
       <SmoothScroll>
-        <main className="relative w-full overflow-hidden">
+        <main className="relative z-10 w-full overflow-hidden bg-[#0a0a0b]">
           <Hero />
           <Marquee items={MARQUEE_ITEMS} />
           <About />
@@ -36,6 +37,7 @@ export default function Home() {
           <Contact />
           <Footer />
         </main>
+        <FooterReveal />
       </SmoothScroll>
     </>
   );
