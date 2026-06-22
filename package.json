@@ -14,10 +14,12 @@
     "@midudev/tailwind-animations": "^0.2.0",
     "axios": "^1.11.0",
     "gsap": "^3.13.0",
+    "lenis": "^1.3.23",
     "lucide-react": "^0.536.0",
     "next": "15.4.10",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -25,6 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.184.1",
     "eslint": "^9",
     "eslint-config-next": "15.4.5",
     "tailwindcss": "^4",

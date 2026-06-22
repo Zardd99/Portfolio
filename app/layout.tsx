@@ -22,8 +22,9 @@ const bebasNeue = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "A portfolio showcasing my skills and projects",
+  title: "Sakda Chin — Front-End Engineer",
+  description:
+    "Portfolio of Sakda Chin — front-end engineer crafting responsive, motion-driven web experiences with React, Next.js, TypeScript and GSAP.",
 };
 
 const RootLayout = async ({ children }: { children: ReactNode }) => {
