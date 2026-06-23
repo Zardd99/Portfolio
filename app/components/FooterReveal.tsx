@@ -4,54 +4,56 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { scrambleText } from "../lib/scramble";
+import Footer from "./Footer";
 
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * Sticky-reveal footer. The giant name lives in a `fixed` layer pinned to the
- * bottom of the viewport, sitting BEHIND the opaque <main> (which carries a
- * solid bg + higher z-index). As the page scrolls to its end, <main> lifts away
- * and uncovers the name — the spacer <section> below reserves the scroll
- * distance for that reveal. A scrubbed tween makes the name actively rise.
+ * Footer reveal — the oversized wordmark sits BEHIND the footer detail panel
+ * and is uncovered as you scroll. The stage is pinned (GSAP) while the opaque
+ * detail panel slides up off it. The whole stage lives in a z-layer ABOVE the
+ * navbar (see page.tsx), so once you reach the footer the navbar stays behind
+ * it ("swallowed").
  */
 const FooterReveal = () => {
-  const ref = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLElement>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        ".fr-giant",
-        { yPercent: 16, autoAlpha: 0.55 },
-        {
-          yPercent: 0,
-          autoAlpha: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: ref.current,
-            start: "top bottom",
-            end: "bottom bottom",
-            scrub: true,
-          },
-        }
-      );
-      gsap.from(".fr-legal > *", {
-        autoAlpha: 0,
-        y: 18,
-        stagger: 0.07,
-        ease: "power3.out",
-        scrollTrigger: { trigger: ref.current, start: "top 55%" },
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: stageRef.current,
+          start: "top top",
+          end: "+=110%",
+          scrub: 1,
+          pin: stageRef.current,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
       });
-    }, ref);
+      // opaque detail slides up and uncovers the giant resting behind it
+      tl.to(detailRef.current, { yPercent: -100, ease: "none" }, 0).fromTo(
+        ".fr-giant",
+        { yPercent: 14 },
+        { yPercent: 0, ease: "none" },
+        0
+      );
+    }, stageRef);
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={ref} className="relative h-screen">
-      <div className="fixed inset-x-0 bottom-0 z-0 flex h-screen flex-col justify-end overflow-hidden bg-[#070708] px-6 pb-6 md:px-12">
+    <section
+      ref={stageRef}
+      id="footer-reveal"
+      className="relative h-screen overflow-hidden bg-[#070708]"
+    >
+      {/* GIANT — rests at the back; uncovered as the detail slides up */}
+      <div className="absolute inset-0 z-0 flex flex-col justify-end px-6 pb-6 md:px-12">
         <div className="grain pointer-events-none absolute inset-0 opacity-[0.03]" />
         <div className="grid-lines pointer-events-none absolute inset-0 opacity-20" />
 
-        {/* giant wordmark */}
         <div className="fr-giant relative flex flex-col leading-[0.76]">
           <span
             className="font-display text-[26vw] text-ink md:text-[21vw]"
@@ -64,8 +66,7 @@ const FooterReveal = () => {
           </span>
         </div>
 
-        {/* legal / meta row */}
-        <div className="fr-legal mt-8 flex flex-col gap-3 border-t border-line pt-5 font-hud text-[10px] text-muted md:flex-row md:items-center md:justify-between">
+        <div className="fr-legal mt-[8vh] flex flex-col gap-3 border-t border-line pt-5 font-hud text-[10px] text-muted md:flex-row md:items-center md:justify-between">
           <span>© {new Date().getFullYear()} SAKDA CHIN — ALL RIGHTS RESERVED</span>
           <span className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-dot" />
@@ -79,6 +80,11 @@ const FooterReveal = () => {
             <span className="transition-transform group-hover:-translate-y-0.5">↑</span>
           </a>
         </div>
+      </div>
+
+      {/* DETAIL — opaque cover in front; slides up to uncover the giant */}
+      <div ref={detailRef} className="absolute inset-0 z-10 bg-[#070708]">
+        <Footer />
       </div>
     </section>
   );

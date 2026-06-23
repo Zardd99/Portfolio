@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type MouseEvent } from "react";
 import Image from "next/image";
 import { Github, ExternalLink, ArrowUpRight } from "lucide-react";
 import { gsap } from "gsap";
@@ -55,6 +55,20 @@ const Projects = () => {
     return () => ctx.revert();
   }, [N]);
 
+  // Magnetic follow — same physics as the Download CV button.
+  const magnet = (e: MouseEvent<HTMLAnchorElement>) => {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    gsap.to(el, {
+      x: (e.clientX - (r.left + r.width / 2)) * 0.3,
+      y: (e.clientY - (r.top + r.height / 2)) * 0.3,
+      duration: 0.4,
+      ease: "power3.out",
+    });
+  };
+  const resetMagnet = (e: MouseEvent<HTMLAnchorElement>) =>
+    gsap.to(e.currentTarget, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1,0.4)" });
+
   return (
     <section id="projects" ref={rootRef} className="relative w-full border-t border-line">
       <div
@@ -93,6 +107,11 @@ const Projects = () => {
             <div className="grid w-full max-w-[1500px] items-center gap-8 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
               {/* text */}
               <div className="order-2 lg:order-1">
+                {project.featured && (
+                  <div className="accent-glow mb-5 inline-flex items-center gap-2 border border-accent/40 bg-accent/10 px-3 py-1.5 font-hud text-[9px] text-accent">
+                    <span className="animate-pulse-dot">★</span> FLAGSHIP PROJECT
+                  </div>
+                )}
                 <div className="flex items-center gap-4 font-hud text-[11px] text-muted">
                   <span className="font-display text-6xl text-accent md:text-7xl">
                     0{i + 1}
@@ -109,7 +128,7 @@ const Projects = () => {
                   {project.title}
                 </h3>
                 <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted">
-                  {project.description.length > 280
+                  {!project.featured && project.description.length > 280
                     ? project.description.slice(0, 280).trimEnd() + "…"
                     : project.description}
                 </p>
@@ -128,6 +147,8 @@ const Projects = () => {
                     href={project.live}
                     target="_blank"
                     rel="noreferrer"
+                    onMouseMove={magnet}
+                    onMouseLeave={resetMagnet}
                     className="group inline-flex items-center gap-2 bg-accent px-6 py-3 font-hud text-[10px] text-[#0a0a0b]"
                   >
                     LIVE DEMO
@@ -148,7 +169,11 @@ const Projects = () => {
               {/* media */}
               <div className="order-1 lg:order-2">
                 <div
-                  className="group relative aspect-[16/10] w-full overflow-hidden border border-line bg-[#101013]"
+                  className={`group relative aspect-[16/10] w-full overflow-hidden border bg-[#101013] ${
+                    project.featured
+                      ? "border-accent/40 shadow-[0_0_70px_-18px_rgba(203,255,71,0.55)]"
+                      : "border-line"
+                  }`}
                   style={{
                     clipPath:
                       "polygon(0 0, calc(100% - 28px) 0, 100% 28px, 100% 100%, 0 100%)",

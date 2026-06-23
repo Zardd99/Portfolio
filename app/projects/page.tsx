@@ -2,7 +2,6 @@ import SmoothScroll from "../components/SmoothScroll";
 import Cursor from "../components/Cursor";
 import Navbar from "../components/Navbar";
 import Projects from "../components/Projects";
-import Footer from "../components/Footer";
 import FooterReveal from "../components/FooterReveal";
 
 export const metadata = {
@@ -17,9 +16,11 @@ export default function ProjectsPage() {
       <SmoothScroll>
         <main className="relative z-10 w-full overflow-hidden bg-[#0a0a0b] pt-20">
           <Projects />
-          <Footer />
         </main>
-        <FooterReveal />
+        {/* Footer sits ABOVE the navbar (z-200) so it swallows it on scroll-in */}
+        <div className="relative z-[210]">
+          <FooterReveal />
+        </div>
       </SmoothScroll>
     </>
   );

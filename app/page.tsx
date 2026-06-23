@@ -7,7 +7,6 @@ import Marquee from "./components/Marquee";
 import About from "./components/About";
 import Projects from "./components/Projects";
 import Contact from "./components/Contact";
-import Footer from "./components/Footer";
 import FooterReveal from "./components/FooterReveal";
 
 const MARQUEE_ITEMS = [
@@ -35,9 +34,11 @@ export default function Home() {
           <Projects />
           <Marquee items={MARQUEE_ITEMS} reverse />
           <Contact />
-          <Footer />
         </main>
-        <FooterReveal />
+        {/* Footer sits ABOVE the navbar (z-200) so it swallows it on scroll-in */}
+        <div className="relative z-[210]">
+          <FooterReveal />
+        </div>
       </SmoothScroll>
     </>
   );
