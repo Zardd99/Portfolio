@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ABOUT_CONTENTS } from "../constants/about";
 import { scrambleText } from "../lib/scramble";
+import Toolkit from "./Toolkit";
+import ProfileCard from "./ProfileCard";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,7 +15,6 @@ const WAVE_BARS = 34;
 const About = () => {
   const data = ABOUT_CONTENTS[0];
   const rootRef = useRef<HTMLDivElement>(null);
-  const portraitRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -71,36 +71,6 @@ const About = () => {
         });
       });
 
-      // ── Profile card: cinematic scroll-in, in-frame parallax, scan sweep.
-      gsap.set(".profile-img", { scale: 1.14 });
-      gsap.from(".profile-card", {
-        autoAlpha: 0,
-        y: 70,
-        rotateX: -22,
-        transformOrigin: "50% 100%",
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: { trigger: portraitRef.current, start: "top 85%" },
-      });
-      gsap.fromTo(
-        ".profile-img",
-        { yPercent: -6 },
-        {
-          yPercent: 6,
-          ease: "none",
-          scrollTrigger: {
-            trigger: portraitRef.current,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-        }
-      );
-      gsap.fromTo(
-        ".profile-scan",
-        { top: "-5%" },
-        { top: "105%", duration: 2.8, ease: "none", repeat: -1 }
-      );
     }, rootRef);
 
     return () => ctx.revert();
@@ -127,24 +97,6 @@ const About = () => {
       ease: "elastic.out(1,0.4)",
     });
 
-  const tiltPortrait = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = portraitRef.current?.querySelector(".profile-card");
-    if (!card) return;
-    const r = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    gsap.to(card, {
-      rotateY: px * 18,
-      rotateX: -py * 18,
-      duration: 0.5,
-      ease: "power2.out",
-    });
-  };
-  const resetPortrait = () => {
-    const card = portraitRef.current?.querySelector(".profile-card");
-    if (card) gsap.to(card, { rotateX: 0, rotateY: 0, duration: 0.9, ease: "elastic.out(1,0.4)" });
-  };
-
   return (
     <section
       id="about"
@@ -169,82 +121,8 @@ const About = () => {
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           {/* left: portrait + story */}
           <div className="space-y-10">
-            {/* 3D profile card */}
-            <div
-              ref={portraitRef}
-              onMouseMove={tiltPortrait}
-              onMouseLeave={resetPortrait}
-              className="relative [perspective:1000px]"
-            >
-              <div className="profile-card group relative aspect-[4/5] w-full [transform-style:preserve-3d]">
-                {/* depth frames behind */}
-                <div
-                  className="pointer-events-none absolute -inset-3 border border-accent/25"
-                  style={{ transform: "translateZ(-60px)" }}
-                />
-                <div
-                  className="pointer-events-none absolute -inset-7 border border-white/5"
-                  style={{ transform: "translateZ(-110px)" }}
-                />
-
-                {/* image frame */}
-                <div
-                  className="relative h-full w-full overflow-hidden border border-line"
-                  style={{ transform: "translateZ(30px)" }}
-                >
-                  <Image
-                    src="/Self.png"
-                    alt="Sakda Chin"
-                    fill
-                    className="profile-img object-cover grayscale transition-[filter] duration-700 group-hover:grayscale-0"
-                    sizes="(max-width: 1024px) 100vw, 40vw"
-                  />
-                  <div className="scanlines absolute inset-0" />
-                  <div className="profile-scan pointer-events-none absolute inset-x-0 top-0 h-px bg-accent/70 shadow-[0_0_12px_2px_rgba(203,255,71,0.5)]" />
-                  <div className="pointer-events-none absolute inset-0 bg-accent/0 transition-colors duration-500 group-hover:bg-accent/[0.06]" />
-                </div>
-
-                {/* corner brackets */}
-                {[
-                  "left-1.5 top-1.5 border-l border-t",
-                  "right-1.5 top-1.5 border-r border-t",
-                  "left-1.5 bottom-1.5 border-l border-b",
-                  "right-1.5 bottom-1.5 border-r border-b",
-                ].map((c) => (
-                  <span
-                    key={c}
-                    className={`pointer-events-none absolute h-5 w-5 border-accent ${c}`}
-                    style={{ transform: "translateZ(55px)" }}
-                  />
-                ))}
-
-                {/* HUD overlays */}
-                <div
-                  className="pointer-events-none absolute left-3 top-3 flex items-center gap-1.5 font-hud text-[9px] text-accent"
-                  style={{ transform: "translateZ(60px)" }}
-                >
-                  <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse-dot" /> REC
-                </div>
-                <span
-                  className="pointer-events-none absolute bottom-3 left-3 font-hud text-[9px] text-accent"
-                  style={{ transform: "translateZ(60px)" }}
-                >
-                  ● SAKDA_CHIN.JPG
-                </span>
-                <span
-                  className="pointer-events-none absolute bottom-3 right-3 font-hud text-[9px] text-muted"
-                  style={{ transform: "translateZ(60px)" }}
-                >
-                  4:5
-                </span>
-
-                {/* spinning dashed badge */}
-                <div
-                  className="pointer-events-none absolute -right-5 -top-5 h-16 w-16 animate-spin-slow rounded-full border border-dashed border-accent/40"
-                  style={{ transform: "translateZ(75px)" }}
-                />
-              </div>
-            </div>
+            {/* interactive 3D profile card */}
+            <ProfileCard />
 
             <div className="reveal space-y-5">
               {data.story.map((p, i) => (
@@ -320,20 +198,13 @@ const About = () => {
           </div>
         </div>
 
-        {/* tools marquee */}
+        {/* tools — draggable to rearrange */}
         <div className="reveal mt-16">
-          <h3 className="mb-6 font-hud text-[11px] text-muted">{"// DAILY TOOLKIT"}</h3>
-          <div className="flex flex-wrap gap-3">
-            {data.tools.map((tool) => (
-              <div
-                key={tool.id}
-                className="flex items-center gap-2.5 border border-line bg-[#101013] px-4 py-2.5 transition-colors hover:border-accent/50"
-              >
-                <Image src={tool.imgSrc} alt={tool.imgAlt} width={18} height={18} className="object-contain" />
-                <span className="font-hud text-[10px] text-muted">{tool.name}</span>
-              </div>
-            ))}
-          </div>
+          <h3 className="mb-6 flex flex-wrap items-center gap-3 font-hud text-[11px] text-muted">
+            <span>{"// DAILY TOOLKIT"}</span>
+            <span className="text-accent/70">— DRAG TO REARRANGE ↔</span>
+          </h3>
+          <Toolkit tools={data.tools} />
         </div>
       </div>
     </section>

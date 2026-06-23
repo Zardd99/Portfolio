@@ -17,13 +17,17 @@ const Hero = () => {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({ delay: 0.15 });
-      tl.from(".hero-line", {
-        yPercent: 120,
-        duration: 1,
-        ease: "power4.out",
-        stagger: 0.12,
-      })
+      let ready = false;
+
+      const tl = gsap.timeline({
+        delay: 0.15,
+        onComplete: () => {
+          ready = true;
+          // open the masks so parting letters aren't clipped
+          gsap.set(".hero-mask", { overflow: "visible" });
+        },
+      });
+      tl.from(".hero-line", { yPercent: 120, duration: 1, ease: "power4.out", stagger: 0.12 })
         .from(
           ".hero-fade",
           { autoAlpha: 0, y: 24, duration: 0.7, stagger: 0.08, ease: "power3.out" },
@@ -31,17 +35,45 @@ const Hero = () => {
         )
         .from(".hero-chip", { autoAlpha: 0, y: 12, stagger: 0.05, duration: 0.4 }, "-=0.4");
 
-      // mouse parallax on the name block
+      // smoothed per-letter setters for the repel
+      const letters = gsap.utils.toArray<HTMLElement>(".hero-letter", nameRef.current);
+      const setX = letters.map((el) => gsap.quickTo(el, "x", { duration: 0.5, ease: "power3.out" }));
+      const setY = letters.map((el) => gsap.quickTo(el, "y", { duration: 0.5, ease: "power3.out" }));
+      const RADIUS = 165;
+      const MAX = 85;
+
       const onMove = (e: MouseEvent) => {
-        const dx = (e.clientX / window.innerWidth - 0.5) * 2;
-        const dy = (e.clientY / window.innerHeight - 0.5) * 2;
+        // keep the existing 3D tilt facing the cursor
+        const ndx = (e.clientX / window.innerWidth - 0.5) * 2;
+        const ndy = (e.clientY / window.innerHeight - 0.5) * 2;
         gsap.to(nameRef.current, {
-          rotateY: dx * 6,
-          rotateX: -dy * 6,
-          x: dx * 14,
+          rotateY: ndx * 6,
+          rotateX: -ndy * 6,
+          x: ndx * 14,
           duration: 0.6,
           ease: "power2.out",
           transformPerspective: 900,
+        });
+
+        if (!ready) return;
+        // each letter pushes away from the cursor to open a path through the name
+        letters.forEach((el, i) => {
+          const curX = Number(gsap.getProperty(el, "x")) || 0;
+          const curY = Number(gsap.getProperty(el, "y")) || 0;
+          const r = el.getBoundingClientRect();
+          const hx = r.left + r.width / 2 - curX;
+          const hy = r.top + r.height / 2 - curY;
+          const dx = hx - e.clientX;
+          const dy = hy - e.clientY;
+          const dist = Math.hypot(dx, dy) || 1;
+          if (dist < RADIUS) {
+            const push = (1 - dist / RADIUS) * MAX;
+            setX[i]((dx / dist) * push);
+            setY[i]((dy / dist) * push);
+          } else {
+            setX[i](0);
+            setY[i](0);
+          }
         });
       };
       window.addEventListener("mousemove", onMove);
@@ -50,6 +82,13 @@ const Hero = () => {
 
     return () => ctx.revert();
   }, []);
+
+  const renderLetters = (text: string, className = "") =>
+    text.split("").map((ch, i) => (
+      <span key={`${text}-${i}`} className={`hero-letter inline-block ${className}`}>
+        {ch}
+      </span>
+    ));
 
   return (
     <section
@@ -78,15 +117,15 @@ const Hero = () => {
           className="font-display leading-[0.82] text-ink"
           style={{ transformStyle: "preserve-3d" }}
         >
-          <div className="overflow-hidden">
+          <div className="hero-mask overflow-hidden">
             <div className="hero-line text-[19vw] md:text-[16vw] lg:text-[14vw]">
-              SAKDA
+              {renderLetters("SAKDA")}
             </div>
           </div>
-          <div className="overflow-hidden">
+          <div className="hero-mask overflow-hidden">
             <div className="hero-line text-[19vw] md:text-[16vw] lg:text-[14vw]">
-              <span className="text-stroke-accent">CHIN</span>
-              <span className="text-accent">.</span>
+              {renderLetters("CHIN", "text-stroke-accent")}
+              <span className="hero-letter inline-block text-accent">.</span>
             </div>
           </div>
         </div>
