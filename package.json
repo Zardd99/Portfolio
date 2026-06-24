@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@emailjs/nodejs": "^2.2.0",
+    "@emailjs/nodejs": "^5.0.2",
     "@gsap/react": "^2.1.2",
     "@midudev/tailwind-animations": "^0.2.0",
     "axios": "^1.11.0",
