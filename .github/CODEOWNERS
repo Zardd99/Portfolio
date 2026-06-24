@@ -1,0 +1,6 @@
+# Default owner for everything in the repo.
+* @Zardd99
+
+# Security-sensitive areas — review carefully.
+/app/api/         @Zardd99
+/.github/         @Zardd99
