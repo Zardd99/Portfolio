@@ -57,8 +57,22 @@ const SnakeGame = () => {
   }, []);
 
   const draw = useCallback(() => {
-    const ctx = canvasRef.current?.getContext("2d");
-    if (!ctx) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
+
+    // Render at the device's pixel density so the board stays sharp when the
+    // container scales up on 2K/4K displays. Game logic stays in SIZE units;
+    // the context is scaled to fill the rendered (CSS) size crisply.
+    const dpr = window.devicePixelRatio || 1;
+    const displaySize = canvas.clientWidth || SIZE;
+    const target = Math.max(1, Math.round(displaySize * dpr));
+    if (canvas.width !== target || canvas.height !== target) {
+      canvas.width = target;
+      canvas.height = target;
+    }
+    const scale = target / SIZE;
+    ctx.setTransform(scale, 0, 0, scale, 0, 0);
 
     ctx.fillStyle = "#0a0a0b";
     ctx.fillRect(0, 0, SIZE, SIZE);
@@ -167,6 +181,13 @@ const SnakeGame = () => {
     reset();
   }, [reset]);
 
+  // keep the canvas crisp across breakpoint / window resizes
+  useEffect(() => {
+    const onResize = () => draw();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [draw]);
+
   // game loop
   useEffect(() => {
     let raf = 0;
@@ -213,8 +234,8 @@ const SnakeGame = () => {
     "flex h-12 items-center justify-center border border-line bg-[#101013] font-hud text-lg text-ink active:border-accent active:text-accent";
 
   return (
-    <div className="w-full max-w-[460px]">
-      <div className="mb-3 flex items-center justify-between font-hud text-[10px] text-muted">
+    <div className="w-full max-w-[460px] lg:max-w-[600px] 2xl:max-w-[820px]">
+      <div className="mb-3 flex items-center justify-between font-hud text-[10px] text-muted lg:text-xs 2xl:text-sm">
         <span>
           SCORE <span className="text-accent">{String(score).padStart(3, "0")}</span>
         </span>
@@ -246,23 +267,23 @@ const SnakeGame = () => {
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-[#0a0a0b]/70 px-6 text-center backdrop-blur-sm">
             {status === "over" ? (
               <>
-                <div className="font-hud text-[11px] tracking-[0.3em] text-accent">GAME OVER</div>
-                <div className="font-display text-7xl leading-none text-ink">{score}</div>
-                <div className="font-hud text-[10px] text-muted">
+                <div className="font-hud text-[11px] tracking-[0.3em] text-accent lg:text-sm 2xl:text-base">GAME OVER</div>
+                <div className="font-display text-7xl leading-none text-ink lg:text-8xl 2xl:text-9xl">{score}</div>
+                <div className="font-hud text-[10px] text-muted lg:text-xs 2xl:text-sm">
                   {score >= hi && score > 0 ? "★ NEW BEST" : `BEST ${String(hi).padStart(3, "0")}`}
                 </div>
               </>
             ) : (
               <>
-                <div className="font-display text-5xl leading-none text-ink">
+                <div className="font-display text-5xl leading-none text-ink lg:text-6xl 2xl:text-8xl">
                   SNAKE<span className="text-accent">.</span>
                 </div>
-                <div className="font-hud text-[10px] text-muted">ARROWS / WASD TO MOVE</div>
+                <div className="font-hud text-[10px] text-muted lg:text-xs 2xl:text-sm">ARROWS / WASD TO MOVE</div>
               </>
             )}
             <button
               onClick={start}
-              className="group relative mt-1 overflow-hidden border border-accent px-7 py-2.5 font-hud text-[11px] text-accent transition-colors hover:text-[#0a0a0b]"
+              className="group relative mt-1 overflow-hidden border border-accent px-7 py-2.5 font-hud text-[11px] text-accent transition-colors hover:text-[#0a0a0b] lg:px-9 lg:py-3 lg:text-sm"
             >
               <span className="relative z-10">{status === "over" ? "PLAY AGAIN" : "▶ START"}</span>
               <span className="absolute inset-0 -translate-x-full bg-accent transition-transform duration-300 group-hover:translate-x-0" />
@@ -289,7 +310,7 @@ const SnakeGame = () => {
         </button>
       </div>
 
-      <p className="mt-4 hidden font-hud text-[10px] leading-relaxed text-muted sm:block">
+      <p className="mt-4 hidden font-hud text-[10px] leading-relaxed text-muted sm:block lg:text-xs 2xl:text-sm">
         GRAB THE LIME SQUARE · DODGE THE WALLS &amp; YOUR OWN TAIL · SPEED RISES WITH SCORE
       </p>
     </div>
