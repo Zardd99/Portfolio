@@ -234,7 +234,7 @@ const SnakeGame = () => {
     "flex h-12 items-center justify-center border border-line bg-[#101013] font-hud text-lg text-ink active:border-accent active:text-accent";
 
   return (
-    <div className="w-full max-w-[460px] lg:max-w-[600px] 2xl:max-w-[820px]">
+    <div className="mx-auto w-full max-w-[900px]">
       <div className="mb-3 flex items-center justify-between font-hud text-[10px] text-muted lg:text-xs 2xl:text-sm">
         <span>
           SCORE <span className="text-accent">{String(score).padStart(3, "0")}</span>
