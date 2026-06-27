@@ -35,6 +35,7 @@ const SnakeGame = () => {
   const [status, setStatus] = useState<Status>("idle");
   const [score, setScore] = useState(0);
   const [hi, setHi] = useState(0);
+  const [isTouch, setIsTouch] = useState(false);
 
   const snake = useRef<Pt[]>([]);
   const dir = useRef<Pt>({ x: 1, y: 0 });
@@ -188,6 +189,16 @@ const SnakeGame = () => {
     return () => window.removeEventListener("resize", onResize);
   }, [draw]);
 
+  // show on-screen controls on touch devices (phones AND tablets/iPads),
+  // not just narrow viewports
+  useEffect(() => {
+    const mq = window.matchMedia("(pointer: coarse)");
+    const update = () => setIsTouch(mq.matches || "ontouchstart" in window);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
   // game loop
   useEffect(() => {
     let raf = 0;
@@ -231,7 +242,12 @@ const SnakeGame = () => {
   }, [steer, start]);
 
   const dpadBtn =
-    "flex h-12 items-center justify-center border border-line bg-[#101013] font-hud text-lg text-ink active:border-accent active:text-accent";
+    "flex aspect-square items-center justify-center border border-line bg-[#101013] font-hud text-2xl text-ink transition-colors active:border-accent active:bg-accent/10 active:text-accent";
+
+  const press = (nd: Pt) => (e: React.PointerEvent) => {
+    e.preventDefault();
+    steer(nd);
+  };
 
   return (
     <div className="mx-auto w-full max-w-[900px]">
@@ -278,7 +294,9 @@ const SnakeGame = () => {
                 <div className="font-display text-5xl leading-none text-ink lg:text-6xl 2xl:text-8xl">
                   SNAKE<span className="text-accent">.</span>
                 </div>
-                <div className="font-hud text-[10px] text-muted lg:text-xs 2xl:text-sm">ARROWS / WASD TO MOVE</div>
+                <div className="font-hud text-[10px] text-muted lg:text-xs 2xl:text-sm">
+                  {isTouch ? "TAP THE PAD TO MOVE" : "ARROWS / WASD TO MOVE"}
+                </div>
               </>
             )}
             <button
@@ -292,23 +310,30 @@ const SnakeGame = () => {
         )}
       </div>
 
-      {/* mobile d-pad */}
-      <div className="mx-auto mt-5 grid w-44 grid-cols-3 gap-2 sm:hidden">
-        <span />
-        <button className={dpadBtn} onClick={() => steer({ x: 0, y: -1 })} aria-label="Up">
-          ↑
-        </button>
-        <span />
-        <button className={dpadBtn} onClick={() => steer({ x: -1, y: 0 })} aria-label="Left">
-          ←
-        </button>
-        <button className={dpadBtn} onClick={() => steer({ x: 0, y: 1 })} aria-label="Down">
-          ↓
-        </button>
-        <button className={dpadBtn} onClick={() => steer({ x: 1, y: 0 })} aria-label="Right">
-          →
-        </button>
-      </div>
+      {/* on-screen d-pad — shown on touch devices (phones + tablets/iPads) */}
+      {isTouch && (
+        <div className="mx-auto mt-6 grid w-[clamp(180px,58vw,240px)] grid-cols-3 gap-2 touch-none select-none">
+          <span />
+          <button className={dpadBtn} onPointerDown={press({ x: 0, y: -1 })} aria-label="Up">
+            ↑
+          </button>
+          <span />
+          <button className={dpadBtn} onPointerDown={press({ x: -1, y: 0 })} aria-label="Left">
+            ←
+          </button>
+          <span className="flex items-center justify-center">
+            <span className="h-2 w-2 rotate-45 bg-accent/60" />
+          </span>
+          <button className={dpadBtn} onPointerDown={press({ x: 1, y: 0 })} aria-label="Right">
+            →
+          </button>
+          <span />
+          <button className={dpadBtn} onPointerDown={press({ x: 0, y: 1 })} aria-label="Down">
+            ↓
+          </button>
+          <span />
+        </div>
+      )}
 
       <p className="mt-4 hidden font-hud text-[10px] leading-relaxed text-muted sm:block lg:text-xs 2xl:text-sm">
         GRAB THE LIME SQUARE · DODGE THE WALLS &amp; YOUR OWN TAIL · SPEED RISES WITH SCORE
